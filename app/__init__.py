@@ -12,7 +12,7 @@ from .seeds import seed_commands
 from .config import Config
 from .socket_io import socketio
 
-app = Flask(__name__, static_folder='../react-app/build', static_url_path='/')
+app = Flask(__name__, static_folder='../react-app/build', static_url_path='')
 
 # Setup login manager
 login = LoginManager(app)
@@ -57,6 +57,9 @@ def https_redirect():
             url = request.url.replace('http://', 'https://', 1)
             code = 301
             return redirect(url, code=code)
+    else:
+        print('Not in production')
+        return
 
 
 @app.after_request
