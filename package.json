@@ -3,6 +3,6 @@
     "@fortawesome/fontawesome-svg-core": "^6.4.0"
   },
   "engines": {
-    "node": ">=16.0.0 <20.0.0"
+    "node": ">=16.0.0"
   }
 }
