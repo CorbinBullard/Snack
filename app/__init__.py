@@ -18,7 +18,6 @@ app = Flask(__name__, static_folder='../react-app/build', static_url_path='/')
 login = LoginManager(app)
 login.login_view = 'auth.unauthorized'
 
-
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -37,20 +36,13 @@ app.register_blueprint(thread_routes, url_prefix='/api/threads')
 db.init_app(app)
 Migrate(app, db)
 
-#initialize app with socket
+# Initialize app with Socket.IO
 socketio.init_app(app, async_mode='gevent')
 
 # Application Security
 CORS(app)
 
-
-
-
-# Since we are deploying with Docker and Flask,
-# we won't be using a buildpack when we deploy to Heroku.
-# Therefore, we need to make sure that in production any
-# request made over http is redirected to https.
-# Well.........
+# Redirect HTTP to HTTPS
 @app.before_request
 def https_redirect():
     if os.environ.get('FLASK_ENV') == 'production':
@@ -60,8 +52,6 @@ def https_redirect():
             return redirect(url, code=code)
     else:
         print('Not in production')
-        return
-
 
 @app.after_request
 def inject_csrf_token(response):
@@ -69,11 +59,9 @@ def inject_csrf_token(response):
         'csrf_token',
         generate_csrf(),
         secure=True if os.environ.get('FLASK_ENV') == 'production' else False,
-        samesite='Strict' if os.environ.get(
-            'FLASK_ENV') == 'production' else None,
+        samesite='Strict' if os.environ.get('FLASK_ENV') == 'production' else None,
         httponly=True)
     return response
-
 
 @app.route("/api/docs")
 def api_help():
@@ -85,7 +73,6 @@ def api_help():
                     app.view_functions[rule.endpoint].__doc__ ]
                     for rule in app.url_map.iter_rules() if rule.endpoint != 'static' }
     return route_list
-
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -99,11 +86,10 @@ def react_root(path):
         return app.send_from_directory('public', 'favicon.ico')
     return app.send_static_file('index.html')
 
-
 @app.errorhandler(404)
 def not_found(e):
     return app.send_static_file('index.html')
 
-# run socket
+# Run socket
 if __name__ == '__main__':
     socketio.run(app)
