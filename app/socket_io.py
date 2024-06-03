@@ -7,6 +7,8 @@ if os.environ.get("FLASK_ENV") == "production":
     origins = [
         "http://snack-m5nc.onrender.com",
         "https://snack-m5nc.onrender.com",
+        "http://snack-m5nc.onrender.com/",
+        "https://snack-m5nc.onrender.com/",
     ]
 else:
     origins = "*"
