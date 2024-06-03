@@ -10,7 +10,7 @@ else:
     origins = "*"
 
 # Create your SocketIO instance
-socketio = SocketIO(cors_allowed_origins=origins)
+socketio = SocketIO(cors_allowed_origins="*")
 
 @socketio.on('chat')
 def handle_chat(data):
